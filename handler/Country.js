@@ -6,7 +6,8 @@
     const route = "/countries";
     let url = require("url");
 
-    function Countries() {
+    function Countries(res) {
+        res.writeHead(200);
         res.write('<body>Countries proxy list</body>');
     }
 

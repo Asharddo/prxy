@@ -26,7 +26,7 @@
         console.log(req, res);
         console.log("handlers",handlers);
         if (handlers[req.url]) {
-            res.writeHead(200);
+            handlers[req.url](res);
         }
         else {
             res.writeHead(404)
