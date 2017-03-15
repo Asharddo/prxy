@@ -3,25 +3,64 @@
  */
 (function () {
     "use strick";
-    const URLPX = "http://awmproxy.com/socks_proxy.txt?country=1";
     let http = require("http");
-    let needle = require("needle");
+    let request = require("request");
+    let async = require("async");
+    let HttpsProxyAgent = require('https-proxy-agent');
+    let prxy = [];
+    const URLPX = "http://awmproxy.com/socks_proxy.txt?country=1";
 
-    class Prxlst {
-       refreshPrx (){
-            //location.reload(); ??
+    class PrxLst {
+        constructor(URPLX, updateTime) {
+            //console.log(this.pushedPrxy());
+            //setInterval(this.pushedPrxy, updateTime);
 
         }
-        setPrx(){
-           needle.get(URLPX, function (err, res, body) {
-               if (err) throw err;
-               //const someRegExp = /\d*.\d*.\d*.\d*:\d*;/g;
-               let ipArr = body.split(';');
-               console.log(ipArr);
-               console.log(ipArr.length + 1);
-           });
+
+        pushedPrxy() {
+            request(URLPX, function (err, res, body) {
+                if (err) throw err;
+                let regex = /(\d*.\d*.\d*.\d*):(\d*);([A-Z]{2}$)/gm;
+                let str = regex.exec(body);
+
+                while ((str = regex.exec(body)) !== null) {
+                    if (str.index === regex.lastIndex) {
+                        regex.lastIndex++;
+                    }
+                    prxy = str;
+
+                    let ourQueue = async.queue(function () {
+                        
+                    }, 20);
+
+                    let agent = new HttpsProxyAgent({
+                        proxyHost: prxy[1],
+                        proxyPort: prxy[2]
+                    });
+                    let test1  = http.request({
+                        host: 'www.google.com',
+                        port: 443,
+                        method: 'GET',
+                        agent:agent
+                    });
+                    if (test1 == true){
+                        console.log(prxy[1] + ":" + prxy[2]);
+                    }
+
+
+                   // console.log(prxy[1] + ":" + prxy[2]);
+                }
+            });
         }
+
+
+        checkPrxy(){
+        }
+
     }
-    let prxyexmpl = new Prxlst();
-    prxyexmpl.setPrx();
+
+    example = new PrxLst(URLPX, 10000);
+    example.pushedPrxy();
+
+    module.exports = PrxLst;
 })();

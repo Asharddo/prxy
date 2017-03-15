@@ -4,6 +4,8 @@
 (function () {
     "use strict";
     const handlersDir = "./handler/";
+    const URLPX = "http://awmproxy.com/socks_proxy.txt?country=1";
+
     let {createServer} = require("http");
     let url = require("url");
     let fs = require("fs");
