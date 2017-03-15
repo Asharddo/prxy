@@ -30,9 +30,9 @@
                     prxy = str;
 
                     let ourQueue = async.queue(function () {
-                        
+                        //та самая конкурентная очередь
                     }, 20);
-
+                    //где-то в следующих девяти( по 45-ю) строках ошибка, но я не знаю где
                     let agent = new HttpsProxyAgent({
                         proxyHost: prxy[1],
                         proxyPort: prxy[2]
