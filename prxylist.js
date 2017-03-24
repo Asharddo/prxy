@@ -29,32 +29,31 @@
                     }
                     prxy = str;
 
-                    let ourQueue = async.queue(function () {
+                    let ourQueue = async.queue(function (task, callback) {
                         //та самая конкурентная очередь
+                        //В таск пойдет прокси запрос
+                        //В колбэк пойдет запись прокси жив = тру
                     }, 20);
-                    //где-то в следующих девяти( по 45-ю) строках ошибка, но я не знаю где
-                    let agent = new HttpsProxyAgent({
-                        proxyHost: prxy[1],
-                        proxyPort: prxy[2]
-                    });
-                    let test1  = http.request({
-                        host: 'www.google.com',
-                        port: 443,
-                        method: 'GET',
-                        agent:agent
-                    });
-                    if (test1 == true){
-                        console.log(prxy[1] + ":" + prxy[2]);
-                    }
+                    //тут будет находится пуш, который будет подгружать в фунцию наши
+                    //поля объекта масива
+                        let agent = new HttpsProxyAgent({
+                            proxyHost: prxy[1],
+                            proxyPort: prxy[2]
+                        });
+                        let test1 = http.request({
+                            host: 'rozklad.kpi.ua', //Сюда впихнуть адекватный урл
+                            port: 80,
+                            method: 'GET',
+                            agent: agent
+                        });
+                        if (test1 == true) {
+                            console.log(prxy[1] + ":" + prxy[2]);
+                        }
 
 
                    // console.log(prxy[1] + ":" + prxy[2]);
                 }
             });
-        }
-
-
-        checkPrxy(){
         }
 
     }

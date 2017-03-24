@@ -1,12 +1,28 @@
 {
   "name": "prxy",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.1.5",
+    "cheerio": "^0.22.0",
+    "https-proxy-agent": "^1.0.0",
+    "needle": "^1.5.0",
+    "request": "^2.80.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Asharddo/prxy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Asharddo/prxy/issues"
+  },
+  "homepage": "https://github.com/Asharddo/prxy#readme",
+  "description": ""
 }
