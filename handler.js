@@ -23,7 +23,6 @@
         this.server.listen(port);
         console.log(`Server is listening on port ${port}`);
     }
-
     Crtnlnt.prototype.handler = function (req, res) {
         console.log(req, res);
         console.log("handlers",handlers);

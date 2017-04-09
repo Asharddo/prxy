@@ -3,7 +3,7 @@
  */
 (function () {
     "use strick";
-    let http = require("http");
+    let https = require("https");
     let request = require("request");
     let async = require("async");
     let HttpsProxyAgent = require('https-proxy-agent');
@@ -11,9 +11,9 @@
     const URLPX = "http://awmproxy.com/socks_proxy.txt?country=1";
 
     class PrxLst {
-        constructor(URPLX, updateTime) {
+        constructor(URLPX, updateTime) {
             //console.log(this.pushedPrxy());
-            //setInterval(this.pushedPrxy, updateTime);
+           // setInterval(this.pushedPrxy, updateTime);
 
         }
 
@@ -29,28 +29,28 @@
                     }
                     prxy = str;
 
-                    let ourQueue = async.queue(function (task, callback) {
-                        //та самая конкурентная очередь
-                        //В таск пойдет прокси запрос
-                        //В колбэк пойдет запись прокси жив = тру
+                    let ourQueue = async.queue(function (task, callback)  {
+                        task = {
+                            hostname: 'google.com',
+                            port: 443,
+                            path: '/',
+                            method: 'GET'
+                        };
+                        let req = https.request(task, (res) => {
+                            console.log('statusCode:', res.statusCode);
+
+                            res.on('data', (d) => {
+                                console.log(prxy[1], ":", prxy[2] );
+                            });
+
+                        });
+                        req.on('error', (e) => {
+                            console.error("nope");
+                        });
+                        req.end();
+
                     }, 20);
-                    //тут будет находится пуш, который будет подгружать в фунцию наши
-                    //поля объекта масива
-                        let agent = new HttpsProxyAgent({
-                            proxyHost: prxy[1],
-                            proxyPort: prxy[2]
-                        });
-                        let test1 = http.request({
-                            host: 'rozklad.kpi.ua', //Сюда впихнуть адекватный урл
-                            port: 80,
-                            method: 'GET',
-                            agent: agent
-                        });
-                        if (test1 == true) {
-                            console.log(prxy[1] + ":" + prxy[2]);
-                        }
-
-
+                    ourQueue.push({host: prxy[1], port: prxy[2]});
                    // console.log(prxy[1] + ":" + prxy[2]);
                 }
             });
