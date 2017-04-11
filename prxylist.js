@@ -30,26 +30,26 @@
                     prxy = str;
 
                     let ourQueue = async.queue(function (task, callback)  {
-                        task = {
+                        let ergoPrxy = {
                             hostname: 'google.com',
                             port: 443,
                             path: '/',
                             method: 'GET'
                         };
-                        let req = https.request(task, (res) => {
+                        let req = https.request(ergoPrxy, (res) => {
                             console.log('statusCode:', res.statusCode);
 
                             res.on('data', (d) => {
-                                console.log(prxy[1], ":", prxy[2] );
+                                console.log(task.host, ":", task.port );
                             });
 
                         });
                         req.on('error', (e) => {
-                            console.error("nope");
+                            //console.error(task.host, ":", task.port );
                         });
                         req.end();
 
-                    }, 20);
+                    }, 5);
                     ourQueue.push({host: prxy[1], port: prxy[2]});
                    // console.log(prxy[1] + ":" + prxy[2]);
                 }
