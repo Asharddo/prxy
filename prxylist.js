@@ -6,15 +6,13 @@
     let https = require("https");
     let request = require("request");
     let async = require("async");
-    let HttpsProxyAgent = require('https-proxy-agent');
-    let prxy = [];
+    //let prxy = [];
     const URLPX = "http://awmproxy.com/socks_proxy.txt?country=1";
 
     class PrxLst {
         constructor(URLPX, updateTime) {
             //console.log(this.pushedPrxy());
-           // setInterval(this.pushedPrxy, updateTime);
-
+            setInterval(this.pushedPrxy, updateTime);
         }
 
         pushedPrxy() {
@@ -23,42 +21,34 @@
                 let regex = /(\d*.\d*.\d*.\d*):(\d*);([A-Z]{2}$)/gm;
                 let str = regex.exec(body);
 
-                while ((str = regex.exec(body)) !== null) {
-                    if (str.index === regex.lastIndex) {
-                        regex.lastIndex++;
+                let ourQueue = async.queue(function (task, callback)  {
+                    let ergoPrxy = {
+                        hostname: 'google.com',
+                        port: 443,
+                        path: '/',
+                        method: 'GET'
+                    };
+                    let req = https.request(ergoPrxy, (res) => {
+                       // console.log('statusCode:', res.statusCode,"||", str[1], ":", str[2]);
+                    });
+                    req.end();
+                    //
+                    // let prxy = $.map(str, function(value, index) {
+                    //     return [value];
+                    // });
+                    // console.log(prxy);
+
+                }, 20);
+                str.forEach(() => {
+                    if (regex.exec(body) !== null) {
+                        ourQueue.push({host: str[1], port: str[2]});
                     }
-                    prxy = str;
-
-                    let ourQueue = async.queue(function (task, callback)  {
-                        let ergoPrxy = {
-                            hostname: 'google.com',
-                            port: 443,
-                            path: '/',
-                            method: 'GET'
-                        };
-                        let req = https.request(ergoPrxy, (res) => {
-                            console.log('statusCode:', res.statusCode);
-
-                            res.on('data', (d) => {
-                                console.log(task.host, ":", task.port );
-                            });
-
-                        });
-                        req.on('error', (e) => {
-                            //console.error(task.host, ":", task.port );
-                        });
-                        req.end();
-
-                    }, 5);
-                    ourQueue.push({host: prxy[1], port: prxy[2]});
-                   // console.log(prxy[1] + ":" + prxy[2]);
-                }
+                });
             });
         }
-
     }
-
-    example = new PrxLst(URLPX, 10000);
+//
+    example = new PrxLst(URLPX, 20000);
     example.pushedPrxy();
 
     module.exports = PrxLst;

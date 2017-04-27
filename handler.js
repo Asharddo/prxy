@@ -30,7 +30,7 @@
             handlers[req.url](res);
         }
         else {
-            res.writeHead(404)
+            res.writeHead(404);
         }
         res.end();
     };
